@@ -9,6 +9,7 @@ public class MainWindow extends JFrame{
     public int height = Toolkit.getDefaultToolkit().getScreenSize().height;
     public int windowsWedth = 400;
     public int windowsHeight = 350;
+    private Register register;
     public MainWindow() {
     	this.setTitle("P2PChat");
         this.setVisible(true);
@@ -16,7 +17,11 @@ public class MainWindow extends JFrame{
                 (height - windowsHeight) / 2, windowsWedth, windowsHeight);
         JTabbedPane p=new JTabbedPane(JTabbedPane.TOP);
         //TODO 添加选项卡各组件 p.add(名称,组件);
-        p.add("注册", new Register());
+        
+        register =  new Register();
+        register.setMainWin(this);
+        p.add("注册",register);
+        
         p.add("聊天", new JLabel("null"));
         p.add("关于", new JLabel("Copywrong (￠) &#$@##@, No Rights Reserved."));
         

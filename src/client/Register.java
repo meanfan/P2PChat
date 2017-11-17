@@ -10,7 +10,9 @@ public class Register extends JPanel implements ActionListener{
 	private JButton btn;
 	public String ip;
 	public String name;
-	public Register()
+	private Message message;
+	boolean isRegister = false;
+	public Register(Message message)
 	{
 		boxV1 = Box.createVerticalBox();
 		boxV1.add(new JLabel("输入服务器IP："));
@@ -36,7 +38,9 @@ public class Register extends JPanel implements ActionListener{
 		baseBox.add(subBoxH2);
 		add(baseBox);
 		validate();
-		
+		tfIP.setText("127.0.0.1");
+		tfName.setText("test");
+		this.message = message;
 	}
 	public void setMainWin(MainWindow m)
 	{
@@ -44,11 +48,28 @@ public class Register extends JPanel implements ActionListener{
 	}
 	public void actionPerformed(ActionEvent e)
 	{
+		if(isRegister==true)
+		{
+			JOptionPane.showConfirmDialog(this, "无需重复注册！");
+			return;
+		}
 		ip = tfIP.getText();
 		name = tfName.getText();
 		if(ip.length() == 0)
 			JOptionPane.showMessageDialog(mainWindow, "请输入服务器IP！");
 		else if(name.length() == 0)
 			JOptionPane.showMessageDialog(mainWindow, "请输入用户名！");
+		else
+		{
+			if(message.register(ip,name) == true) 
+			{
+				isRegister = true;
+				JOptionPane.showMessageDialog(mainWindow, "注册成功。");
+			}
+			else
+			{
+				JOptionPane.showMessageDialog(mainWindow, "注册失败！");
+			}
+		}
 	}
 }

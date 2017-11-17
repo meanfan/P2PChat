@@ -10,15 +10,17 @@ public class MainWindow extends JFrame{
     public int windowsWedth = 400;
     public int windowsHeight = 350;
     private Register register;
+    private Message message;
     public MainWindow() {
     	this.setTitle("P2PChat");
         this.setVisible(true);
         this.setBounds((width - windowsWedth) / 2,
                 (height - windowsHeight) / 2, windowsWedth, windowsHeight);
         JTabbedPane p=new JTabbedPane(JTabbedPane.TOP);
+        message = new Message();
         //TODO 添加选项卡各组件 p.add(名称,组件);
         
-        register =  new Register();
+        register =  new Register(message);
         register.setMainWin(this);
         p.add("注册",register);
         

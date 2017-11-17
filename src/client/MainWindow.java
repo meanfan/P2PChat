@@ -17,11 +17,9 @@ public class MainWindow extends JFrame{
         this.setBounds((width - windowsWedth) / 2,
                 (height - windowsHeight) / 2, windowsWedth, windowsHeight);
         JTabbedPane p=new JTabbedPane(JTabbedPane.TOP);
-        message = new Message();
         //TODO 添加选项卡各组件 p.add(名称,组件);
         
         register =  new Register(message);
-        register.setMainWin(this);
         p.add("注册",register);
         
         p.add("聊天", new JLabel("null"));

@@ -3,14 +3,18 @@ package client;
 import java.awt.event.*;
 import javax.swing.*;
 
+import data.Request;
+import data.Response;
+
 public class Register extends JPanel implements ActionListener{
-	private MainWindow mainWindow;
 	private Box baseBox,subBoxH1,subBoxH2,boxV1,boxV2;
 	private JTextField tfIP,tfName;
 	private JButton btn;
 	public String ip;
 	public String name;
 	private Message message;
+	private Request request;
+	private Response response;
 	boolean isRegister = false;
 	public Register(Message message)
 	{
@@ -42,33 +46,33 @@ public class Register extends JPanel implements ActionListener{
 		tfName.setText("test");
 		this.message = message;
 	}
-	public void setMainWin(MainWindow m)
-	{
-		this.mainWindow = m;
-	}
 	public void actionPerformed(ActionEvent e)
 	{
 		if(isRegister==true)
 		{
-			JOptionPane.showConfirmDialog(this, "无需重复注册！");
+			JOptionPane.showMessageDialog(this, "请勿注册。");
 			return;
 		}
 		ip = tfIP.getText();
 		name = tfName.getText();
 		if(ip.length() == 0)
-			JOptionPane.showMessageDialog(mainWindow, "请输入服务器IP！");
+			JOptionPane.showMessageDialog(null, "请输入服务器IP");
 		else if(name.length() == 0)
-			JOptionPane.showMessageDialog(mainWindow, "请输入用户名！");
+			JOptionPane.showMessageDialog(null, "请输入用户名");
 		else
 		{
-			if(message.register(ip,name) == true) 
+			request = new Request(1,name);
+			message = new Message(ip,request);
+			response=message.getResponse();
+			if(response!=null && response.getType()==1)
 			{
-				isRegister = true;
-				JOptionPane.showMessageDialog(mainWindow, "注册成功。");
-			}
-			else
-			{
-				JOptionPane.showMessageDialog(mainWindow, "注册失败！");
+				if(response.getSuccess()==true)
+				{
+					JOptionPane.showMessageDialog(null, "注册成功！");
+					isRegister = true;
+				}
+				else
+					JOptionPane.showMessageDialog(null, "注册失败，IP/用户名已存在");
 			}
 		}
 	}

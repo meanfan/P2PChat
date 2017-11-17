@@ -2,35 +2,63 @@ package client;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.net.Socket;
 
+import javax.swing.JOptionPane;
+
 import data.Request;
+import data.Response;
 
 public class Message{
-	public boolean register(String ip,String name)
+	private String ip;
+	private Socket socket;
+	private ObjectInputStream in;
+	private ObjectOutputStream out;
+	private Request request;
+	private Response response;
+	
+	public boolean connect(String ip,Request request)
 	{
-		Request request = new Request(1,name);
-		
-		return send(ip,request);
-	}
-	public boolean send(String ip,Request request)
-	{
-		Socket client=null;
-		ObjectInputStream in = null;
-		ObjectOutputStream out = null;
+		this.ip = ip;
+		this.request = request;
 		try {
-			client = new Socket(ip,2333);
+			socket = new Socket(ip,2333);
 			System.out.println("connected to "+ip+":2333");
-			in = new ObjectInputStream(client.getInputStream());
-			out = new ObjectOutputStream(client.getOutputStream());
-			out.writeObject(request);
-			System.out.println("request sent:"+request);
-			client.close();
-			return true;
-			}
-		catch(IOException e) {
-			System.out.println("Connect error!");
+		}catch(IOException e1) {
+			e1.printStackTrace();
 			return false;
-			}
+		}
+		
+		try {
+			out = new ObjectOutputStream(socket.getOutputStream());
+			in = new ObjectInputStream(socket.getInputStream());
+		}catch(IOException e2) {
+			e2.printStackTrace();
+			return false;
+		}
+		return true;
 	}
+	public Response getResponse()
+	{
+		return response;
+	}
+	Message(String ip,Request request)
+	{
+		if(connect(ip,request)==false)
+			JOptionPane.showMessageDialog(null, "服务器连接失败！");
+		else
+		{
+			try {
+				out.writeObject(request);
+				System.out.println("request sent:"+request);
+			}catch(IOException e1) {e1.getStackTrace();}
+			try {
+				response = (Response)in.readObject();
+			}catch (IOException e2) {e2.printStackTrace();}
+			catch (ClassNotFoundException e3) {e3.printStackTrace();}
+		}
+	}
+
 }

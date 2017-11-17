@@ -1,6 +1,8 @@
 package data;
 
-public class Request {
+import java.io.Serializable;
+
+public class Request implements Serializable{
 	private int type;
 	private String myName;
 	private String yourName;

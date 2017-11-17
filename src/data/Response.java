@@ -1,9 +1,11 @@
 package data;
 
+import java.io.Serializable;
 import java.util.Vector;
 
-public class Response {
+public class Response implements Serializable{
 	private int type;
+	private boolean success;
 	private String message;
 	private Vector<String> nameList;
 	private Vector<String> ipList;
@@ -11,6 +13,11 @@ public class Response {
 	public Response(int type)
 	{
 		this.type = type;
+	}
+	public Response(int type,boolean success)
+	{
+		this(type);
+		this.success = success;
 	}
 	public Response(int type,String message)
 	{
@@ -27,6 +34,10 @@ public class Response {
 	public int getType()
 	{
 		return type;
+	}
+	public boolean getSuccess()
+	{
+		return success;
 	}
 	public String getMessage()
 	{

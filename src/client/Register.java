@@ -50,7 +50,7 @@ public class Register extends JPanel implements ActionListener{
 	{
 		if(isRegister==true)
 		{
-			JOptionPane.showMessageDialog(this, "ÇëÎð×¢²á¡£");
+			JOptionPane.showMessageDialog(this, "ÇëÎðÖØ¸´×¢²á¡£");
 			return;
 		}
 		ip = tfIP.getText();

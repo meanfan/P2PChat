@@ -6,10 +6,13 @@ public class Request implements Serializable{
 	private int type;
 	private String myName;
 	private String yourName;
-	
-	public Request(int type,String myName)
+	public Request(int type)
 	{
 		this.type = type;
+	}
+	public Request(int type,String myName)
+	{
+		this(type);
 		this.myName = myName;
 	}
 	public Request(int type,String myName,String yourName)

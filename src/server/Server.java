@@ -74,11 +74,20 @@ class ServerThread extends Thread{
 				{
 					table.put(request.getMyName(),socket.getInetAddress());
 					System.out.println("new register:"+request.getMyName()+"|"+socket.getInetAddress());
+					System.out.println(table.toString());
 					response = new Response(1,true);
 				}
 				try {
 					out.writeObject(response);
 				}catch(IOException e) {e.printStackTrace();}
+				break;
+			case 2:
+				response = new Response(2,table);
+				try {
+					out.writeObject(response);
+					System.out.println("table sent");
+				}catch(IOException e) {e.printStackTrace();}
+				break;
 			}
 		}
 	}

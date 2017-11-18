@@ -10,7 +10,8 @@ public class MainWindow extends JFrame{
     public int windowsWedth = 400;
     public int windowsHeight = 350;
     private Register register;
-    private Message message;
+    private ChatTable chatTable;
+    private String myName;
     public MainWindow() {
     	this.setTitle("P2PChat");
         this.setVisible(true);
@@ -19,12 +20,12 @@ public class MainWindow extends JFrame{
         JTabbedPane p=new JTabbedPane(JTabbedPane.TOP);
         //TODO 添加选项卡各组件 p.add(名称,组件);
         
-        register =  new Register(message);
+        register =  new Register();
+        this.myName = register.getName();
         p.add("注册",register);
-        
-        p.add("聊天", new JLabel("null"));
+        chatTable = new ChatTable(myName);
+        p.add("聊天", chatTable);
         p.add("关于", new JLabel("Copywrong (￠) &#$@##@, No Rights Reserved."));
-        
         p.validate();
         this.add(p,BorderLayout.CENTER);
         this.validate();

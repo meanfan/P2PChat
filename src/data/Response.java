@@ -1,15 +1,14 @@
 package data;
 
 import java.io.Serializable;
-import java.util.Vector;
+import java.net.InetAddress;
+import java.util.HashMap;
 
 public class Response implements Serializable{
 	private int type;
 	private boolean success;
+	private HashMap<String,InetAddress> table;
 	private String message;
-	private Vector<String> nameList;
-	private Vector<String> ipList;
-	
 	public Response(int type)
 	{
 		this.type = type;
@@ -24,11 +23,10 @@ public class Response implements Serializable{
 		this(type);
 		this.message = message;
 	}
-	public Response(int type,Vector<String> nameList,Vector<String> ipList)
+	public Response(int type,HashMap<String,InetAddress> table)
 	{
 		this(type);
-		this.nameList = nameList;
-		this.ipList = ipList;
+		this.table = table;
 	}
 	
 	public int getType()
@@ -43,14 +41,8 @@ public class Response implements Serializable{
 	{
 		return message;
 	}
-	public Vector<String> getNameList()
+	public HashMap<String,InetAddress> getTable()
 	{
-		return nameList;
+		return table;
 	}
-	public Vector<String> getIpList()
-	{
-		return ipList;
-	}
-	
-	
 }

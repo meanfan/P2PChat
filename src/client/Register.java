@@ -1,18 +1,24 @@
 package client;
 
 import java.awt.event.*;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+
 import javax.swing.*;
 
 import data.Request;
 import data.Response;
-
+/*
+ *注册面板类 
+ */
 public class Register extends JPanel implements ActionListener{
+
 	private Box baseBox,subBoxH1,subBoxH2,boxV1,boxV2;
 	private JTextField tfIP,tfName;
 	private JButton btn;
-	public String ip;
+	public InetAddress address;
 	public String name;
-	private Message message;
+	private TCPCommWithServer message;
 	private Request request;
 	private Response response;
 	boolean isRegister = false;
@@ -49,6 +55,14 @@ public class Register extends JPanel implements ActionListener{
 	{
 		return name;
 	}
+	public InetAddress getAddress()
+	{
+		return address;
+	}
+	public boolean isRegistered()
+	{
+		return isRegister;
+	}
 	public void actionPerformed(ActionEvent e)
 	{
 		if(isRegister==true)
@@ -56,30 +70,39 @@ public class Register extends JPanel implements ActionListener{
 			JOptionPane.showMessageDialog(this, "请勿重复注册。");
 			return;
 		}
-		ip = tfIP.getText();
-		name = tfName.getText();
-		if(ip.length() == 0)
-			JOptionPane.showMessageDialog(null, "请输入服务器IP");
-		else if(name.length() == 0)
-			JOptionPane.showMessageDialog(null, "请输入用户名");
-		else
+		if(tfIP.getText().length() == 0)
 		{
-			request = new Request(1,name);
-			message = new Message(ip,request);
-			response=message.getResponse();
-			if(response!=null && response.getType()==1)
+			JOptionPane.showMessageDialog(null, "请输入服务器IP");
+			return;
+		}
+		if(tfName.getText().length() == 0)
+		{
+			JOptionPane.showMessageDialog(null, "请输入用户名");
+			return;
+		}
+		try {
+			address = InetAddress.getByName(tfIP.getText());
+		} catch (UnknownHostException e1) {
+			JOptionPane.showMessageDialog(null, "服务器IP错误");
+			e1.printStackTrace();
+			}
+		name = tfName.getText();
+		request = new Request(Request.TYPE_REGISTER,name);
+		message = new TCPCommWithServer(address,request);
+		response=message.getResponse();
+		if(response!=null && response.getType()==Request.TYPE_REGISTER)
+		{
+			if(response.getSuccess()==true)
 			{
-				if(response.getSuccess()==true)
-				{
-					JOptionPane.showMessageDialog(null, "注册成功！");
-					isRegister = true;
-					
-				}
-				else
-					JOptionPane.showMessageDialog(null, "注册失败，IP/用户名已存在");
+				JOptionPane.showMessageDialog(null, "注册成功！");
+				new UDPMessageListener();
+				isRegister = true;
+				
 			}
 			else
-				JOptionPane.showMessageDialog(null, "与服务器通讯错误");
+				JOptionPane.showMessageDialog(null, "注册失败，IP/用户名已存在");
 		}
+		else
+			JOptionPane.showMessageDialog(null, "与服务器通讯错误");
 	}
 }

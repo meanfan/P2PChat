@@ -1,10 +1,25 @@
 package data;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.net.InetAddress;
 import java.util.HashMap;
-
+/*
+ * »Ø¸´µÄ·â×°
+ */
 public class Response implements Serializable{
+	public static final int TYPE_REGISTER = 1;
+	public static final int TYPE_USERS_LIST = 2;
+	public static final boolean REGISTER_SUCCESS = true;
+	public static final boolean REGISTER_FAIL = false;
+	public static final int TYPE_CHAT_ACCECPT = 3;
+	public static final  boolean CHAT_ACCECPT_SUCCESS = true;
+	public static final boolean CHAT_ACCECPT_FAIL = false;
+	
 	private int type;
 	private boolean success;
 	private HashMap<String,InetAddress> table;
@@ -44,5 +59,26 @@ public class Response implements Serializable{
 	public HashMap<String,InetAddress> getTable()
 	{
 		return table;
+	}
+	public byte[] toByte()
+	{
+		ByteArrayOutputStream bo = new ByteArrayOutputStream(); 
+		ObjectOutputStream oo;
+		try {
+			oo = new ObjectOutputStream(bo);
+			oo.writeObject(this);
+		} catch (IOException e) {e.printStackTrace();} 
+		return bo.toByteArray();
+	}
+	public static Response toResponse(byte b[])
+	{
+		ByteArrayInputStream bi = new ByteArrayInputStream(b); 
+		ObjectInputStream oi;
+		try {
+			oi = new ObjectInputStream(bi);
+			return (Response)oi.readObject();
+		} catch (ClassNotFoundException e) {e.printStackTrace();}
+		catch (IOException e1) {e1.printStackTrace();}
+		return null;
 	}
 }

@@ -11,26 +11,23 @@ import javax.swing.JOptionPane;
 import data.Request;
 import data.Response;
 
-public class Message{
-	private String ip;
+public class TCPCommWithServer{
+	private InetAddress address;
 	private Socket socket;
 	private ObjectInputStream in;
 	private ObjectOutputStream out;
 	private Request request;
 	private Response response;
 	
-	public boolean connect(String ip,Request request)
+	public boolean connect(InetAddress address,Request request)
 	{
-		this.ip = ip;
-		this.request = request;
 		try {
-			socket = new Socket(ip,2333);
-			System.out.println("connected to "+ip+":2333");
+			socket = new Socket(address,2333);
+			System.out.println("connected to "+address);
 		}catch(IOException e1) {
 			e1.printStackTrace();
 			return false;
 		}
-		
 		try {
 			out = new ObjectOutputStream(socket.getOutputStream());
 			in = new ObjectInputStream(socket.getInputStream());
@@ -44,9 +41,11 @@ public class Message{
 	{
 		return response;
 	}
-	Message(String ip,Request request)
+	TCPCommWithServer(InetAddress add,Request req)
 	{
-		if(connect(ip,request)==false)
+		this.address = add;
+		this.request = req;
+		if(connect(address,request)==false)
 			JOptionPane.showMessageDialog(null, "服务器连接失败！");
 		else
 		{

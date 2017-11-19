@@ -1,8 +1,16 @@
 package client;
 
+import java.awt.BorderLayout;
+import java.awt.Button;
+import java.awt.FlowLayout;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.*;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
 import java.net.InetAddress;
+import java.net.SocketException;
 import java.util.HashMap;
 
 import javax.swing.*;
@@ -10,20 +18,23 @@ import javax.swing.*;
 import data.Request;
 import data.Response;
 
-
+/*
+ * 聊天列表类
+ */
 public class ChatTable extends JPanel implements ActionListener{
 	private JButton btn1,btn2;
 	private Box box1,box2, basebox;
 	private JTable tb;
 	private String myName;
-	private String ip;
+	private InetAddress serverAddress;
+	private Register register;
 	private Request request;
 	private Response response;
-	private Message message;
+	private TCPCommWithServer message;
 	private HashMap<String,InetAddress> table;
 	Object nameList[][];
 	Object title[] = {"用户名"};
-	ChatTable(String name){
+	ChatTable(Register register){
 		btn1 = new JButton("获取列表");
 		btn1.addActionListener(this);
 		btn2 = new JButton("开始聊天");
@@ -38,21 +49,28 @@ public class ChatTable extends JPanel implements ActionListener{
 		basebox.add(box2);
 		add(basebox);
 		validate();
-		myName = name;
+		this.register = register;
+		
 	}
 	public void actionPerformed(ActionEvent e)
 	{
 		JButton b = (JButton)e.getSource();
+		if(register.isRegistered() == false)
+		{
+			JOptionPane.showMessageDialog(null, "请先注册！");
+			return;
+		}
 		if(b == btn1)
 		{
-			request = new Request(2);
-			message = new Message(ip,request);
+			myName = register.getName();
+			serverAddress = register.getAddress();
+			request = new Request(Request.TYPE_USER_LIST);
+			message = new TCPCommWithServer(serverAddress,request);
 			response=message.getResponse();
-			if(response!=null && response.getType()==2)
+			if(response!=null && response.getType()==Response.TYPE_USERS_LIST)
 			{
-				
 				table = response.getTable();
-				System.out.println(table.get("test"));
+				//System.out.println(table.get("test"));
 				int size = table.size();
 				nameList = new Object[size][1];
 				String s[] = new String[size];
@@ -71,10 +89,22 @@ public class ChatTable extends JPanel implements ActionListener{
 		}
 		if(b == btn2)
 		{
-			Object s = nameList[tb.getSelectedRow()][0];
-			InetAddress a = table.get(s);
-			new ChatWin(myName,(String)s,a);
+			int row = tb.getSelectedRow();
+			if(row!=-1) 
+			{
+				String name2Chat = (String)nameList[tb.getSelectedRow()][0];
+				if(name2Chat.matches(myName))
+				{
+					JOptionPane.showMessageDialog(null, "不能和自己聊天！");
+					return;
+				}
+				InetAddress address2Chat = table.get(name2Chat);
+				System.out.println("Ready to chat:"+name2Chat+"|"+address2Chat);
+				ChatThread ct = new ChatThread(true,myName,name2Chat,address2Chat);
+				ct.start();
+			}
+			else
+				JOptionPane.showMessageDialog(null, "请选择一个聊天对象！");
 		}
 	}
-	
 }

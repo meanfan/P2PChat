@@ -1,5 +1,7 @@
 package client;
-
+/*
+ * 主窗口类
+ */
 import javax.swing.*;
 
 import java.awt.BorderLayout;
@@ -21,9 +23,8 @@ public class MainWindow extends JFrame{
         //TODO 添加选项卡各组件 p.add(名称,组件);
         
         register =  new Register();
-        this.myName = register.getName();
         p.add("注册",register);
-        chatTable = new ChatTable(myName);
+        chatTable = new ChatTable(register);
         p.add("聊天", chatTable);
         p.add("关于", new JLabel("Copywrong (￠) &#$@##@, No Rights Reserved."));
         p.validate();

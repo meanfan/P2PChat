@@ -64,7 +64,7 @@ class ServerThread extends Thread{
 		{
 			switch(request.getType())
 			{
-			case 1:
+			case Request.TYPE_REGISTER:
 				if(table.containsKey(request.getMyName()))
 				{
 					System.out.println("registe refused,name existed:"+request.getMyName()+"|"+socket.getInetAddress());
@@ -81,7 +81,7 @@ class ServerThread extends Thread{
 					out.writeObject(response);
 				}catch(IOException e) {e.printStackTrace();}
 				break;
-			case 2:
+			case Request.TYPE_USER_LIST:
 				response = new Response(2,table);
 				try {
 					out.writeObject(response);

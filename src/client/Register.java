@@ -24,7 +24,7 @@ public class Register extends JPanel implements ActionListener{
 	private Request request;
 	private Response response;
 	boolean isRegister = false;
-	public Register()
+	public Register(UDPMessageListener msgListener)
 	{
 		boxV1 = Box.createVerticalBox();
 		boxV1.add(new JLabel("输入服务器IP："));
@@ -50,8 +50,9 @@ public class Register extends JPanel implements ActionListener{
 		baseBox.add(subBoxH2);
 		add(baseBox);
 		validate();
-		tfIP.setText("127.0.0.1");
+		tfIP.setText("192.168.244.1");
 		tfName.setText("test");
+		this.msgListener = msgListener;
 	}
 	public String getName()
 	{
@@ -64,6 +65,10 @@ public class Register extends JPanel implements ActionListener{
 	public boolean isRegistered()
 	{
 		return isRegister;
+	}
+	public void close()
+	{
+		message.close();
 	}
 	public void actionPerformed(ActionEvent e)
 	{
@@ -97,7 +102,7 @@ public class Register extends JPanel implements ActionListener{
 			if(response.getSuccess()==true)
 			{
 				JOptionPane.showMessageDialog(null, "注册成功！");
-				msgListener = new UDPMessageListener();
+				msgListener.setMyName(name);
 				msgListener.start();
 				isRegister = true;
 				

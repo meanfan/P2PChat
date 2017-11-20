@@ -5,6 +5,7 @@ import java.awt.Cursor;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
@@ -23,7 +24,7 @@ import data.Request;
 /*
  * 聊天窗口类
  */
-public class ChatWin extends JFrame implements ActionListener{
+public class ChatWin extends JFrame implements ActionListener,Runnable{
 	public int width = Toolkit.getDefaultToolkit().getScreenSize().width;
     public int height = Toolkit.getDefaultToolkit().getScreenSize().height;
     public int windowsWedth = 400;
@@ -35,12 +36,10 @@ public class ChatWin extends JFrame implements ActionListener{
     private Box baseBoxH,boxV;
 	private String myName;
 	private String yourName;
-	private InetAddress ip;
-	private Request request;
-	private DatagramSocket socket;
-	private DatagramPacket packet;
+	private InetAddress address;
 	private UDPMessageListener msgListener;
-	public ChatWin(String myName,String yourName,UDPMessageListener msgListener)
+	private Request request;
+	public ChatWin(String myName,String yourName,UDPMessageListener msgListener,InetAddress address)
 	{
 		this.setTitle("Chating");
         this.setVisible(true);
@@ -71,26 +70,66 @@ public class ChatWin extends JFrame implements ActionListener{
         messagePanel.add(baseBoxH, BorderLayout.SOUTH);
         add(messagePanel);
         validate();
+        this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+        sendButton.addActionListener(this);
+        closeButton.addActionListener(this);
 		this.myName = myName;
 		this.yourName = yourName;
-		this.ip = ip;
+		this.address = address;
+		this.msgListener = msgListener;
 	}
 	public void actionPerformed(ActionEvent e)
 	{
-		JButton b = (JButton)e.getSource();
-		if(b == sendButton)
+		JButton bt = (JButton)e.getSource();
+		if(bt == sendButton)
 		{
-			
+			String message = msgSend.getText();
+			if( message.length() != 0 )
+			{
+				request = new Request(Request.TYPE_CHAT_MSEEAGE,message);
+				byte b[]=request.toByte();
+				DatagramPacket packet = new DatagramPacket(b,b.length,address,2333);
+				try {
+					//System.out.println("sending msg");
+					msgListener.getSocket().send(packet);
+					//System.out.println("msg sent");
+					msg.append("\n" + myName + "(我)>" + message);
+					msgSend.setText("");
+				} catch (IOException e1) {e1.printStackTrace();}
+			}
 		}
-		if(b == closeButton)
+		if(bt == closeButton)
 		{
-			
+			request = new Request(Request.TYPE_CHAT_QUIT);
+			byte b[]=request.toByte();
+			DatagramPacket packet = new DatagramPacket(b,b.length,address,2333);
+			try {
+				//System.out.println("sending quit msg");
+				msgListener.getSocket().send(packet);
+				//System.out.println("msg quit sent");
+			} catch (IOException e1) {e1.printStackTrace();}
+			this.dispose();
+			Thread.interrupted();
 		}
 	}
-//	public static void main(String args[])//测试用
-//	{
-//		try {
-//			new ChatWin("me","you",InetAddress.getLocalHost());
-//		} catch (UnknownHostException e) {e.printStackTrace();}
-//	}
+	public void run()
+	{
+		while(true)
+		{
+			while(msgListener.isGetMsg == false)
+			{
+				try {
+					Thread.sleep(500);
+				} catch (InterruptedException e) {e.printStackTrace();}
+			}
+			System.out.println("msg got");
+			if(msgListener.getRequest().getType() == Request.TYPE_CHAT_QUIT)
+			{
+				this.dispose();
+				break;
+			}
+			msg.append("\n"+this.yourName+">"+msgListener.getRequest().getMessage());
+			msgListener.isGetMsg = false;
+		}
+	}
 }

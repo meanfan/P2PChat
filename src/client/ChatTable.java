@@ -32,8 +32,8 @@ public class ChatTable extends JPanel implements ActionListener{
 	private Response response;
 	private TCPCommWithServer message;
 	private HashMap<String,InetAddress> table;
-	Object nameList[][];
-	Object title[] = {"用户名"};
+	private Object nameList[][];
+	private Object title[] = {"用户名"};
 	ChatTable(Register register){
 		btn1 = new JButton("获取列表");
 		btn1.addActionListener(this);
@@ -100,7 +100,7 @@ public class ChatTable extends JPanel implements ActionListener{
 				}
 				InetAddress address2Chat = table.get(name2Chat);
 				System.out.println("Ready to chat:"+name2Chat+"|"+address2Chat);
-				ChatThread ct = new ChatThread(register.msgListener,myName,name2Chat,address2Chat);
+				ChatRqt ct = new ChatRqt(register.msgListener,myName,name2Chat,address2Chat);
 				ct.start();
 			}
 			else

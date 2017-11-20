@@ -15,36 +15,38 @@ public class Request implements Serializable{
 	public static final int TYPE_CHAT_REQUEST = 3;
 	public static final int TYPE_CHAT_REQUEST_ACCECPTED = 4;
 	public static final int TYPE_CHAT_REQUEST_REFUSED = 5;
+	public static final int TYPE_CHAT_MSEEAGE = 6;
+	public static final int TYPE_CHAT_QUIT = 7;
 	
 	private int type;
-	private String myName;
-	private String yourName;
+	private String name;
+	private String message;
 	public Request(int type)
 	{
 		this.type = type;
 	}
-	public Request(int type,String myName)
+	public Request(int type,String str)
 	{
 		this(type);
-		this.myName = myName;
-	}
-	public Request(int type,String myName,String yourName)
-	{
-		this(type,myName);
-		this.yourName = yourName;
+		if(type == TYPE_REGISTER)
+			this.name = str;
+		if(type == TYPE_CHAT_REQUEST)
+			this.name = str;
+		else if(type == TYPE_CHAT_MSEEAGE)
+			this.message = str;
 	}
 	
 	public int getType()
 	{
 		return type;
 	}
-	public String getMyName()
+	public String getName()
 	{
-		return myName;
+		return name;
 	}
-	public String getYourName()
+	public String getMessage()
 	{
-		return yourName;
+		return message;
 	}
 	public byte[] toByte()
 	{

@@ -65,15 +65,15 @@ class ServerThread extends Thread{
 			switch(request.getType())
 			{
 			case Request.TYPE_REGISTER:
-				if(table.containsKey(request.getMyName()))
+				if(table.containsKey(request.getName()))
 				{
-					System.out.println("registe refused,name existed:"+request.getMyName()+"|"+socket.getInetAddress());
+					System.out.println("registe refused,name existed:"+request.getName()+"|"+socket.getInetAddress());
 					response = new Response(1,false);
 				}
 				else
 				{
-					table.put(request.getMyName(),socket.getInetAddress());
-					System.out.println("new register:"+request.getMyName()+"|"+socket.getInetAddress());
+					table.put(request.getName(),socket.getInetAddress());
+					System.out.println("new register:"+request.getName()+"|"+socket.getInetAddress());
 					System.out.println(table.toString());
 					response = new Response(1,true);
 				}

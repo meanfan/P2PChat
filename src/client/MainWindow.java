@@ -6,6 +6,8 @@ import javax.swing.*;
 
 import java.awt.BorderLayout;
 import java.awt.Toolkit;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 public class MainWindow extends JFrame{
 	public int width = Toolkit.getDefaultToolkit().getScreenSize().width;
     public int height = Toolkit.getDefaultToolkit().getScreenSize().height;
@@ -13,7 +15,7 @@ public class MainWindow extends JFrame{
     public int windowsHeight = 350;
     private Register register;
     private ChatTable chatTable;
-    private String myName;
+    public UDPMessageListener msgListener;
     public MainWindow() {
     	this.setTitle("P2PChat");
         this.setVisible(true);
@@ -21,8 +23,8 @@ public class MainWindow extends JFrame{
                 (height - windowsHeight) / 2, windowsWedth, windowsHeight);
         JTabbedPane p=new JTabbedPane(JTabbedPane.TOP);
         //TODO 添加选项卡各组件 p.add(名称,组件);
-        
-        register =  new Register();
+        msgListener = new UDPMessageListener(2333);
+        register =  new Register(msgListener);
         p.add("注册",register);
         chatTable = new ChatTable(register);
         p.add("聊天", chatTable);
@@ -30,7 +32,18 @@ public class MainWindow extends JFrame{
         p.validate();
         this.add(p,BorderLayout.CENTER);
         this.validate();
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        addWindowListener(new WindowAdapter(){
+        	public void windowClosing(WindowEvent e) {
+        		close();
+        	}
+        });
+        setVisible(true);
+        setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+    }
+    public void close()
+    {
+    	msgListener.close();
+    	System.exit(0);
     }
 	public static void main(String[] args) {
 		new MainWindow();

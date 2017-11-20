@@ -3,30 +3,43 @@ package client;
 import java.io.IOException;
 import java.net.*;
 
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 import data.*;
 
 public class UDPMessageListener extends Thread{
-	DatagramPacket packet;
-	DatagramSocket socket;
-	Request request;
-	String myName;
-	String yourName;
-	InetAddress address;
+	public int port;
+	private DatagramPacket packet;
+	public DatagramSocket socket;
+	private Request request;
+	private String myName;
+	private String yourName;
+	private InetAddress address;
 	public int isChatAccecpted;
-	UDPMessageListener()
+	private boolean isClosing;
+	public boolean isGetMsg;
+	public boolean isQuit;
+	UDPMessageListener(int port)
 	{
+		this.port = port;
 		isChatAccecpted = 0;
+		isClosing = false;
+		isQuit = false;
 		byte b2[] = new byte[1024];
 		packet = new DatagramPacket(b2,b2.length);
 		try {
-			socket = new DatagramSocket(2333);
+			socket = new DatagramSocket(port);
 		} catch (SocketException e) {e.printStackTrace();}
+	}
+	void setMyName(String myName)
+	{
+		this.myName = myName;
 	}
 	void chat()
 	{
-		int c = JOptionPane.showConfirmDialog(null, "聊天请求来自"+request.getMyName()+"。\n是否同意？","信息",JOptionPane.YES_NO_OPTION);
+		yourName = request.getName();
+		int c = JOptionPane.showConfirmDialog(null, "聊天请求来自"+yourName+"。\n是否同意？","信息",JOptionPane.YES_NO_OPTION);
 		
 		if(c==JOptionPane.YES_OPTION)
 		{
@@ -37,7 +50,10 @@ public class UDPMessageListener extends Thread{
 				System.out.println("also request accecpted sending");
 				socket.send(packet);
 				System.out.println("also request accecpted sent");
-				new ChatWin(myName,yourName,this);
+				WaitResponseWin waitWin = new WaitResponseWin(this,false);
+				waitWin.setChatInfo(myName, yourName);
+				Thread waitWinThread = new Thread(waitWin);
+				waitWinThread.start();
 			} catch (IOException e) {e.printStackTrace();}
 		}
 		else
@@ -56,9 +72,24 @@ public class UDPMessageListener extends Thread{
 	{
 		return socket;
 	}
+	public InetAddress getAddress()
+	{
+		return address;
+	}
+	public Request getRequest()
+	{
+		return request;
+	}
+	
+	public void close()
+	{
+		isClosing = true;
+		socket.close();
+	}
 	public void run()
 	{
-		while(true)
+		
+		while(!isClosing)
 		{
 			try {
 				socket.receive(packet);
@@ -67,19 +98,25 @@ public class UDPMessageListener extends Thread{
 				request = Request.toRequest(packet.getData());
 				if(request.getType()==Request.TYPE_CHAT_REQUEST)
 				{
-					System.out.println("[UDP]Request：TYPE_CHAT_REQUEST");
+					//System.out.println("[UDP]Request：TYPE_CHAT_REQUEST");
 					chat();
 				}else if(request.getType()==Request.TYPE_CHAT_REQUEST_ACCECPTED)
 				{
-					System.out.println("[UDP]Request：TYPE_CHAT_REQUEST_ACCECPTED");
+					//System.out.println("[UDP]Request：TYPE_CHAT_REQUEST_ACCECPTED");
 					isChatAccecpted = 1;
 				}else if(request.getType()==Request.TYPE_CHAT_REQUEST_REFUSED)
 				{
-					System.out.println("[UDP]Request：TYPE_CHAT_REQUEST_REFUSED");
+					//System.out.println("[UDP]Request：TYPE_CHAT_REQUEST_REFUSED");
 					isChatAccecpted = 2;
-				}else
+				}else if(request.getType()==Request.TYPE_CHAT_MSEEAGE)
 				{
-					
+					//通知ChatWin有新消息
+					isGetMsg = true;
+				}else if(request.getType()==Request.TYPE_CHAT_QUIT)
+				{
+					//通知ChatWin退出
+					isGetMsg = true;
+					isQuit = true;
 				}
 				Thread.sleep(500);
 				} catch (IOException e) {e.printStackTrace();

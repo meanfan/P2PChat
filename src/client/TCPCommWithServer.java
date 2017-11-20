@@ -41,6 +41,14 @@ public class TCPCommWithServer{
 	{
 		return response;
 	}
+	public void close()
+	{
+		try {
+			socket.close();
+			out.close();
+			in.close();
+		} catch (IOException e) {e.printStackTrace();}
+	}
 	TCPCommWithServer(InetAddress add,Request req)
 	{
 		this.address = add;

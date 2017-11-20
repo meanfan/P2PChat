@@ -92,7 +92,7 @@ public class ChatTable extends JPanel implements ActionListener{
 			int row = tb.getSelectedRow();
 			if(row!=-1) 
 			{
-				String name2Chat = (String)nameList[tb.getSelectedRow()][0];
+				String name2Chat = (String)nameList[row][0];
 				if(name2Chat.matches(myName))
 				{
 					JOptionPane.showMessageDialog(null, "不能和自己聊天！");
@@ -100,7 +100,7 @@ public class ChatTable extends JPanel implements ActionListener{
 				}
 				InetAddress address2Chat = table.get(name2Chat);
 				System.out.println("Ready to chat:"+name2Chat+"|"+address2Chat);
-				ChatThread ct = new ChatThread(true,myName,name2Chat,address2Chat);
+				ChatThread ct = new ChatThread(register.msgListener,myName,name2Chat,address2Chat);
 				ct.start();
 			}
 			else

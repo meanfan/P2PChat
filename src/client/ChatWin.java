@@ -39,7 +39,8 @@ public class ChatWin extends JFrame implements ActionListener{
 	private Request request;
 	private DatagramSocket socket;
 	private DatagramPacket packet;
-	public ChatWin(String myName,String yourName,InetAddress ip)
+	private UDPMessageListener msgListener;
+	public ChatWin(String myName,String yourName,UDPMessageListener msgListener)
 	{
 		this.setTitle("Chating");
         this.setVisible(true);
@@ -49,7 +50,7 @@ public class ChatWin extends JFrame implements ActionListener{
         msg.setLineWrap(true);
         msg.setWrapStyleWord(true);
         msg.setEditable(false);
-        msg.append("等待连接...");
+        msg.append("");
         msgSend = new JTextArea(3,30);
         msgSend.setLineWrap(true);
         sendButton = new JButton("发送");
@@ -86,10 +87,10 @@ public class ChatWin extends JFrame implements ActionListener{
 			
 		}
 	}
-	public static void main(String args[])//测试用
-	{
-		try {
-			new ChatWin("me","you",InetAddress.getLocalHost());
-		} catch (UnknownHostException e) {e.printStackTrace();}
-	}
+//	public static void main(String args[])//测试用
+//	{
+//		try {
+//			new ChatWin("me","you",InetAddress.getLocalHost());
+//		} catch (UnknownHostException e) {e.printStackTrace();}
+//	}
 }

@@ -16,10 +16,9 @@ public class Response implements Serializable{
 	public static final int TYPE_USERS_LIST = 2;
 	public static final boolean REGISTER_SUCCESS = true;
 	public static final boolean REGISTER_FAIL = false;
-	public static final int TYPE_CHAT_ACCECPT = 3;
-	public static final  boolean CHAT_ACCECPT_SUCCESS = true;
-	public static final boolean CHAT_ACCECPT_FAIL = false;
-	
+//	public static final int TYPE_CHAT_ACCECPT = 3;
+//	public static final  boolean CHAT_ACCECPT_SUCCESS = true;
+//	public static final boolean CHAT_ACCECPT_FAIL = false;
 	private int type;
 	private boolean success;
 	private HashMap<String,InetAddress> table;

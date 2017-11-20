@@ -1,6 +1,7 @@
 package client;
 
 import java.awt.event.*;
+import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
@@ -18,6 +19,7 @@ public class Register extends JPanel implements ActionListener{
 	private JButton btn;
 	public InetAddress address;
 	public String name;
+	public UDPMessageListener msgListener;
 	private TCPCommWithServer message;
 	private Request request;
 	private Response response;
@@ -95,7 +97,8 @@ public class Register extends JPanel implements ActionListener{
 			if(response.getSuccess()==true)
 			{
 				JOptionPane.showMessageDialog(null, "×¢²á³É¹¦£¡");
-				new UDPMessageListener();
+				msgListener = new UDPMessageListener();
+				msgListener.start();
 				isRegister = true;
 				
 			}

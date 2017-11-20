@@ -13,6 +13,8 @@ public class Request implements Serializable{
 	public static final int TYPE_REGISTER = 1;
 	public static final int TYPE_USER_LIST = 2;
 	public static final int TYPE_CHAT_REQUEST = 3;
+	public static final int TYPE_CHAT_REQUEST_ACCECPTED = 4;
+	public static final int TYPE_CHAT_REQUEST_REFUSED = 5;
 	
 	private int type;
 	private String myName;

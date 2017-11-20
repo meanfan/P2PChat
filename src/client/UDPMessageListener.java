@@ -14,8 +14,10 @@ public class UDPMessageListener extends Thread{
 	String myName;
 	String yourName;
 	InetAddress address;
+	public int isChatAccecpted;
 	UDPMessageListener()
 	{
+		isChatAccecpted = 0;
 		byte b2[] = new byte[1024];
 		packet = new DatagramPacket(b2,b2.length);
 		try {
@@ -28,23 +30,31 @@ public class UDPMessageListener extends Thread{
 		
 		if(c==JOptionPane.YES_OPTION)
 		{
-			Response response = new Response(Response.TYPE_CHAT_ACCECPT,Response.CHAT_ACCECPT_SUCCESS);
-			byte b[]=response.toByte();
-			DatagramPacket packet = new DatagramPacket(b,b.length);
+			Request request = new Request(Request.TYPE_CHAT_REQUEST_ACCECPTED);
+			byte b[]=request.toByte();
+			DatagramPacket packet = new DatagramPacket(b,b.length,address,2333);
 			try {
+				System.out.println("also request accecpted sending");
 				socket.send(packet);
-				ChatThread ct = new ChatThread(false,myName,(String)request.getMyName(),packet.getAddress());
-				ct.start();
+				System.out.println("also request accecpted sent");
+				new ChatWin(myName,yourName,this);
 			} catch (IOException e) {e.printStackTrace();}
 		}
 		else
 		{
-			Response response = new Response(Response.TYPE_CHAT_ACCECPT,Response.CHAT_ACCECPT_FAIL);
-			DatagramPacket packet = new DatagramPacket(response.toByte(),1024);
+			Request request = new Request(Request.TYPE_CHAT_REQUEST_REFUSED);
+			byte b[]=request.toByte();
+			DatagramPacket packet = new DatagramPacket(b,b.length,address,2333);
 			try {
+				System.out.println("also request refused sending");
 				socket.send(packet);
+				System.out.println("also request refused sent");
 			} catch (IOException e) {e.printStackTrace();}
 		}
+	}
+	public DatagramSocket getSocket()
+	{
+		return socket;
 	}
 	public void run()
 	{
@@ -53,11 +63,24 @@ public class UDPMessageListener extends Thread{
 			try {
 				socket.receive(packet);
 				System.out.println("[UDP]Request got");
+				address = packet.getAddress();
 				request = Request.toRequest(packet.getData());
-					if(request.getType()==Request.TYPE_CHAT_REQUEST)
-					{
-						chat();
-					}
+				if(request.getType()==Request.TYPE_CHAT_REQUEST)
+				{
+					System.out.println("[UDP]Request£ºTYPE_CHAT_REQUEST");
+					chat();
+				}else if(request.getType()==Request.TYPE_CHAT_REQUEST_ACCECPTED)
+				{
+					System.out.println("[UDP]Request£ºTYPE_CHAT_REQUEST_ACCECPTED");
+					isChatAccecpted = 1;
+				}else if(request.getType()==Request.TYPE_CHAT_REQUEST_REFUSED)
+				{
+					System.out.println("[UDP]Request£ºTYPE_CHAT_REQUEST_REFUSED");
+					isChatAccecpted = 2;
+				}else
+				{
+					
+				}
 				Thread.sleep(500);
 				} catch (IOException e) {e.printStackTrace();
 			} catch (InterruptedException e) {e.printStackTrace();}

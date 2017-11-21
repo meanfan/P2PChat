@@ -42,7 +42,7 @@ public class ChatWin extends JFrame implements ActionListener,Runnable{
 	private boolean isClosing = false;
 	public ChatWin(String myName,String yourName,UDPMessageListener msgListener,InetAddress address)
 	{
-		this.setTitle("Chating");
+		this.setTitle("与"+yourName+"聊天中");
         this.setVisible(true);
         this.setBounds((width - windowsWedth) / 2,
                 (height - windowsHeight) / 2, windowsWedth, windowsHeight);
@@ -91,10 +91,8 @@ public class ChatWin extends JFrame implements ActionListener,Runnable{
 				byte b[]=request.toByte();
 				DatagramPacket packet = new DatagramPacket(b,b.length,address,2333);
 				try {
-					//System.out.println("sending msg");
 					msgListener.getSocket().send(packet);
-					//System.out.println("msg sent");
-					msg.append("\n" + myName + "(我)>" + message);
+					msg.append("\n<" + myName + "(我)>" + message);
 					msgSend.setText("");
 				} catch (IOException e1) {e1.printStackTrace();}
 			}
@@ -129,7 +127,7 @@ public class ChatWin extends JFrame implements ActionListener,Runnable{
 				this.dispose();
 				break;
 			}
-			msg.append("\n"+this.yourName+">"+msgListener.getRequest().getMessage());
+			msg.append("\n<"+this.yourName+">"+msgListener.getRequest().getMessage());
 			msgListener.isGetMsg = false;
 		}
 	}

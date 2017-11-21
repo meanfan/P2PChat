@@ -39,6 +39,7 @@ public class ChatWin extends JFrame implements ActionListener,Runnable{
 	private InetAddress address;
 	private UDPMessageListener msgListener;
 	private Request request;
+	private boolean isClosing = false;
 	public ChatWin(String myName,String yourName,UDPMessageListener msgListener,InetAddress address)
 	{
 		this.setTitle("Chating");
@@ -108,18 +109,18 @@ public class ChatWin extends JFrame implements ActionListener,Runnable{
 				msgListener.getSocket().send(packet);
 				//System.out.println("msg quit sent");
 			} catch (IOException e1) {e1.printStackTrace();}
+			isClosing = true;
 			this.dispose();
-			Thread.interrupted();
 		}
 	}
 	public void run()
 	{
-		while(true)
+		while(!isClosing)
 		{
 			while(msgListener.isGetMsg == false)
 			{
 				try {
-					Thread.sleep(500);
+					Thread.sleep(400);
 				} catch (InterruptedException e) {e.printStackTrace();}
 			}
 			System.out.println("msg got");

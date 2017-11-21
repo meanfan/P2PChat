@@ -8,7 +8,7 @@ import java.awt.BorderLayout;
 import java.awt.Toolkit;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-public class MainWindow extends JFrame{
+public class MainWin extends JFrame{
 	public int width = Toolkit.getDefaultToolkit().getScreenSize().width;
     public int height = Toolkit.getDefaultToolkit().getScreenSize().height;
     public int windowsWedth = 400;
@@ -16,7 +16,7 @@ public class MainWindow extends JFrame{
     private Register register;
     private ChatTable chatTable;
     public UDPMessageListener msgListener;
-    public MainWindow() {
+    public MainWin() {
     	this.setTitle("P2PChat");
         this.setVisible(true);
         this.setBounds((width - windowsWedth) / 2,
@@ -42,11 +42,12 @@ public class MainWindow extends JFrame{
     }
     public void close()
     {
+    	
     	msgListener.close();
     	System.exit(0);
     }
 	public static void main(String[] args) {
-		new MainWindow();
+		new MainWin();
 	}
 
 }

@@ -37,9 +37,10 @@ public class ChatWin extends JFrame implements ActionListener,Runnable{
 	private String myName;
 	private String yourName;
 	private InetAddress address;
-	private UDPMessageListener msgListener;
-	private Request request;
-	private boolean isClosing = false;
+	UDPMessageListener msgListener;//后台UDP消息接收线程
+	private Request request;//请求的封装
+	boolean isClosing = false;//退出程序的通知
+	//初始化并创建聊天窗口
 	public ChatWin(String myName,String yourName,UDPMessageListener msgListener,InetAddress address)
 	{
 		this.setTitle("与"+yourName+"聊天中");
@@ -82,7 +83,7 @@ public class ChatWin extends JFrame implements ActionListener,Runnable{
 	public void actionPerformed(ActionEvent e)
 	{
 		JButton bt = (JButton)e.getSource();
-		if(bt == sendButton)
+		if(bt == sendButton)//发送按钮事件,发送消息类型request
 		{
 			String message = msgSend.getText();
 			if( message.length() != 0 )
@@ -97,20 +98,19 @@ public class ChatWin extends JFrame implements ActionListener,Runnable{
 				} catch (IOException e1) {e1.printStackTrace();}
 			}
 		}
-		if(bt == closeButton)
+		if(bt == closeButton)//关闭按钮事件，发送关闭类型request
 		{
 			request = new Request(Request.TYPE_CHAT_QUIT);
 			byte b[]=request.toByte();
 			DatagramPacket packet = new DatagramPacket(b,b.length,address,2333);
 			try {
-				//System.out.println("sending quit msg");
 				msgListener.getSocket().send(packet);
-				//System.out.println("msg quit sent");
 			} catch (IOException e1) {e1.printStackTrace();}
 			isClosing = true;
 			this.dispose();
 		}
 	}
+	//通过监听msgListener中的变量isGetMsg来获取收到的回复
 	public void run()
 	{
 		while(!isClosing)

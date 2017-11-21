@@ -7,12 +7,14 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 import data.*;
-
+/*
+ * 后台UDP消息接收
+ */
 public class UDPMessageListener extends Thread{
-	public int port;
-	private DatagramPacket packet;
-	public DatagramSocket socket;
-	private Request request;
+	public int port;//端口
+	private DatagramPacket packet;//数据报
+	public DatagramSocket socket;//数据报socket
+	private Request request;//请求的封装
 	private String myName;
 	private String yourName;
 	private InetAddress address;
@@ -20,6 +22,7 @@ public class UDPMessageListener extends Thread{
 	private boolean isClosing;
 	public boolean isGetMsg;
 	public boolean isQuit;
+	//初始化并开启数据报接收socket
 	UDPMessageListener(int port)
 	{
 		this.port = port;
@@ -32,10 +35,12 @@ public class UDPMessageListener extends Thread{
 			socket = new DatagramSocket(port);
 		} catch (SocketException e) {e.printStackTrace();}
 	}
+	//注册成功后设置用户名
 	void setMyName(String myName)
 	{
 		this.myName = myName;
 	}
+	//聊天请求的处理，用户同意后发送回复并启动线程WaitResponseWin
 	void chat()
 	{
 		yourName = request.getName();
@@ -68,24 +73,28 @@ public class UDPMessageListener extends Thread{
 			} catch (IOException e) {e.printStackTrace();}
 		}
 	}
+	//获得socket
 	public DatagramSocket getSocket()
 	{
 		return socket;
 	}
+	//获得地址
 	public InetAddress getAddress()
 	{
 		return address;
 	}
+	//获得请求内容
 	public Request getRequest()
 	{
 		return request;
 	}
-	
+	//关闭处理
 	public void close()
 	{
 		isClosing = true;
 		socket.close();
 	}
+	//不断接受数据报请求，根据数据中包含的类型来通知其他线程
 	public void run()
 	{
 		
@@ -123,5 +132,4 @@ public class UDPMessageListener extends Thread{
 			} catch (InterruptedException e) {e.printStackTrace();}
 		}
 	}
-
 }

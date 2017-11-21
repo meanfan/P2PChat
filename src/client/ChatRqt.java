@@ -8,17 +8,18 @@ import java.net.*;
 import javax.swing.*;
 import data.*;
 /*
- * 聊天线程类，主要是聊天请求的建立
+ * 聊天请求
  */
 class ChatRqt extends Thread{
 	private String myName;
 	private String yourName;
-	private InetAddress address;
-	private Request request;
-	private UDPMessageListener msgListener;
-	private DatagramSocket socket;
-	DatagramPacket chatRequest;
-	DatagramPacket chatRqtResponse;
+	private InetAddress address;//对方地址
+	private Request request;//请求的封装
+	UDPMessageListener msgListener;//后台UDP消息接收线程
+	DatagramSocket socket;//已建立的socket
+	DatagramPacket chatRequest;//请求的数据包
+	DatagramPacket chatRqtResponse;//回复的数据包
+	//传入各参数
 	ChatRqt(UDPMessageListener msgListener,String myName,String yourName,InetAddress address)
 	{
 		this.msgListener = msgListener;
@@ -27,8 +28,9 @@ class ChatRqt extends Thread{
 		this.yourName = yourName;
 		this.address = address;
 	}
+	//发送聊天请求，成功发送后启动WaitResponseWin线程，本线程结束
 	public void run() {
-		//聊天请求
+		
 		request = new Request(Request.TYPE_CHAT_REQUEST,myName);
 		System.out.println("my name:"+myName);
 		byte b1[] = request.toByte();

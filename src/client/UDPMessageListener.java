@@ -8,13 +8,13 @@ import javax.swing.JOptionPane;
 
 import data.*;
 /*
- * ºóÌ¨UDPÏûÏ¢½ÓÊÕ
+ * åå°UDPæ¶ˆæ¯æ¥æ”¶
  */
 public class UDPMessageListener extends Thread{
-	public int port;//¶Ë¿Ú
-	private DatagramPacket packet;//Êı¾İ±¨
-	public DatagramSocket socket;//Êı¾İ±¨socket
-	private Request request;//ÇëÇóµÄ·â×°
+	public int port;//ç«¯å£
+	private DatagramPacket packet;//æ•°æ®æŠ¥
+	public DatagramSocket socket;//æ•°æ®æŠ¥socket
+	private Request request;//è¯·æ±‚çš„å°è£…
 	private String myName;
 	private String yourName;
 	private InetAddress address;
@@ -22,7 +22,7 @@ public class UDPMessageListener extends Thread{
 	private boolean isClosing;
 	public boolean isGetMsg;
 	public boolean isQuit;
-	//³õÊ¼»¯²¢¿ªÆôÊı¾İ±¨½ÓÊÕsocket
+	//åˆå§‹åŒ–å¹¶å¼€å¯æ•°æ®æŠ¥æ¥æ”¶socket
 	UDPMessageListener(int port)
 	{
 		this.port = port;
@@ -35,16 +35,16 @@ public class UDPMessageListener extends Thread{
 			socket = new DatagramSocket(port);
 		} catch (SocketException e) {e.printStackTrace();}
 	}
-	//×¢²á³É¹¦ºóÉèÖÃÓÃ»§Ãû
+	//æ³¨å†ŒæˆåŠŸåè®¾ç½®ç”¨æˆ·å
 	void setMyName(String myName)
 	{
 		this.myName = myName;
 	}
-	//ÁÄÌìÇëÇóµÄ´¦Àí£¬ÓÃ»§Í¬Òâºó·¢ËÍ»Ø¸´²¢Æô¶¯Ïß³ÌWaitResponseWin
+	//èŠå¤©è¯·æ±‚çš„å¤„ç†ï¼Œç”¨æˆ·åŒæ„åå‘é€å›å¤å¹¶å¯åŠ¨çº¿ç¨‹WaitResponseWin
 	void chat()
 	{
 		yourName = request.getName();
-		int c = JOptionPane.showConfirmDialog(null, "ÁÄÌìÇëÇóÀ´×Ô"+yourName+"¡£\nÊÇ·ñÍ¬Òâ£¿","ĞÅÏ¢",JOptionPane.YES_NO_OPTION);
+		int c = JOptionPane.showConfirmDialog(null, "èŠå¤©è¯·æ±‚æ¥è‡ª"+yourName+"ã€‚\næ˜¯å¦åŒæ„ï¼Ÿ","ä¿¡æ¯",JOptionPane.YES_NO_OPTION);
 		
 		if(c==JOptionPane.YES_OPTION)
 		{
@@ -73,28 +73,28 @@ public class UDPMessageListener extends Thread{
 			} catch (IOException e) {e.printStackTrace();}
 		}
 	}
-	//»ñµÃsocket
+	//è·å¾—socket
 	public DatagramSocket getSocket()
 	{
 		return socket;
 	}
-	//»ñµÃµØÖ·
+	//è·å¾—åœ°å€
 	public InetAddress getAddress()
 	{
 		return address;
 	}
-	//»ñµÃÇëÇóÄÚÈİ
+	//è·å¾—è¯·æ±‚å†…å®¹
 	public Request getRequest()
 	{
 		return request;
 	}
-	//¹Ø±Õ´¦Àí
+	//å…³é—­å¤„ç†
 	public void close()
 	{
 		isClosing = true;
 		socket.close();
 	}
-	//²»¶Ï½ÓÊÜÊı¾İ±¨ÇëÇó£¬¸ù¾İÊı¾İÖĞ°üº¬µÄÀàĞÍÀ´Í¨ÖªÆäËûÏß³Ì
+	//ä¸æ–­æ¥å—æ•°æ®æŠ¥è¯·æ±‚ï¼Œæ ¹æ®æ•°æ®ä¸­åŒ…å«çš„ç±»å‹æ¥é€šçŸ¥å…¶ä»–çº¿ç¨‹
 	public void run()
 	{
 		
@@ -107,23 +107,23 @@ public class UDPMessageListener extends Thread{
 				request = Request.toRequest(packet.getData());
 				if(request.getType()==Request.TYPE_CHAT_REQUEST)
 				{
-					//System.out.println("[UDP]Request£ºTYPE_CHAT_REQUEST");
+					//System.out.println("[UDP]Requestï¼šTYPE_CHAT_REQUEST");
 					chat();
 				}else if(request.getType()==Request.TYPE_CHAT_REQUEST_ACCECPTED)
 				{
-					//System.out.println("[UDP]Request£ºTYPE_CHAT_REQUEST_ACCECPTED");
+					//System.out.println("[UDP]Requestï¼šTYPE_CHAT_REQUEST_ACCECPTED");
 					isChatAccecpted = 1;
 				}else if(request.getType()==Request.TYPE_CHAT_REQUEST_REFUSED)
 				{
-					//System.out.println("[UDP]Request£ºTYPE_CHAT_REQUEST_REFUSED");
+					//System.out.println("[UDP]Requestï¼šTYPE_CHAT_REQUEST_REFUSED");
 					isChatAccecpted = 2;
 				}else if(request.getType()==Request.TYPE_CHAT_MSEEAGE)
 				{
-					//Í¨ÖªChatWinÓĞĞÂÏûÏ¢
+					//é€šçŸ¥ChatWinæœ‰æ–°æ¶ˆæ¯
 					isGetMsg = true;
 				}else if(request.getType()==Request.TYPE_CHAT_QUIT)
 				{
-					//Í¨ÖªChatWinÍË³ö
+					//é€šçŸ¥ChatWiné€€å‡º
 					isGetMsg = true;
 					isQuit = true;
 				}

@@ -22,7 +22,7 @@ import javax.swing.JTextArea;
 
 import data.Request;
 /*
- * ÁÄÌì´°¿ÚÀà
+ * èŠå¤©çª—å£ç±»
  */
 public class ChatWin extends JFrame implements ActionListener,Runnable{
 	public int width = Toolkit.getDefaultToolkit().getScreenSize().width;
@@ -37,13 +37,14 @@ public class ChatWin extends JFrame implements ActionListener,Runnable{
 	private String myName;
 	private String yourName;
 	private InetAddress address;
-	UDPMessageListener msgListener;//ºóÌ¨UDPÏûÏ¢½ÓÊÕÏß³Ì
-	private Request request;//ÇëÇóµÄ·â×°
-	boolean isClosing = false;//ÍË³ö³ÌĞòµÄÍ¨Öª
-	//³õÊ¼»¯²¢´´½¨ÁÄÌì´°¿Ú
+	UDPMessageListener msgListener;//åå°UDPæ¶ˆæ¯æ¥æ”¶çº¿ç¨‹
+	private Request request;//è¯·æ±‚çš„å°è£…
+	private Request requestGot; 
+	boolean isClosing = false;//é€€å‡ºç¨‹åºçš„é€šçŸ¥
+	//åˆå§‹åŒ–å¹¶åˆ›å»ºèŠå¤©çª—å£
 	public ChatWin(String myName,String yourName,UDPMessageListener msgListener,InetAddress address)
 	{
-		this.setTitle("Óë"+yourName+"ÁÄÌìÖĞ");
+		this.setTitle("ä¸"+yourName+"èŠå¤©ä¸­");
         this.setVisible(true);
         this.setBounds((width - windowsWedth) / 2,
                 (height - windowsHeight) / 2, windowsWedth, windowsHeight);
@@ -54,8 +55,8 @@ public class ChatWin extends JFrame implements ActionListener,Runnable{
         msg.append("");
         msgSend = new JTextArea(3,30);
         msgSend.setLineWrap(true);
-        sendButton = new JButton("·¢ËÍ");
-        closeButton = new JButton("¹Ø±Õ");
+        sendButton = new JButton("å‘é€");
+        closeButton = new JButton("å…³é—­");
         JPanel messagePanel = new JPanel();
         messagePanel.setLayout(new BorderLayout());
         messagePanel.add(new JScrollPane(msg), BorderLayout.CENTER);
@@ -83,7 +84,7 @@ public class ChatWin extends JFrame implements ActionListener,Runnable{
 	public void actionPerformed(ActionEvent e)
 	{
 		JButton bt = (JButton)e.getSource();
-		if(bt == sendButton)//·¢ËÍ°´Å¥ÊÂ¼ş,·¢ËÍÏûÏ¢ÀàĞÍrequest
+		if(bt == sendButton)//å‘é€æŒ‰é’®äº‹ä»¶,å‘é€æ¶ˆæ¯ç±»å‹request
 		{
 			String message = msgSend.getText();
 			if( message.length() != 0 )
@@ -93,12 +94,12 @@ public class ChatWin extends JFrame implements ActionListener,Runnable{
 				DatagramPacket packet = new DatagramPacket(b,b.length,address,2333);
 				try {
 					msgListener.getSocket().send(packet);
-					msg.append("\n<" + myName + "(ÎÒ)>" + message);
+					msg.append("\n<" + myName + "(æˆ‘)>" + message);
 					msgSend.setText("");
 				} catch (IOException e1) {e1.printStackTrace();}
 			}
 		}
-		if(bt == closeButton)//¹Ø±Õ°´Å¥ÊÂ¼ş£¬·¢ËÍ¹Ø±ÕÀàĞÍrequest
+		if(bt == closeButton)//å…³é—­æŒ‰é’®äº‹ä»¶ï¼Œå‘é€å…³é—­ç±»å‹request
 		{
 			request = new Request(Request.TYPE_CHAT_QUIT);
 			byte b[]=request.toByte();
@@ -110,25 +111,32 @@ public class ChatWin extends JFrame implements ActionListener,Runnable{
 			this.dispose();
 		}
 	}
-	//Í¨¹ı¼àÌımsgListenerÖĞµÄ±äÁ¿isGetMsgÀ´»ñÈ¡ÊÕµ½µÄ»Ø¸´
+	//é€šè¿‡ç›‘å¬msgListenerä¸­çš„å˜é‡isGetMsgæ¥è·å–æ”¶åˆ°çš„å›å¤
 	public void run()
 	{
-		while(!isClosing)
-		{
-			while(msgListener.isGetMsg == false)
+		synchronized(this) {
+			while(!isClosing)
 			{
-				try {
-					Thread.sleep(400);
-				} catch (InterruptedException e) {e.printStackTrace();}
+				while(msgListener.isGetMsg == false)
+				{
+					try {
+						Thread.sleep(400);
+					} catch (InterruptedException e) {e.printStackTrace();}
+				}
+				request = msgListener.getRequest();
+				System.out.println("msg got");
+				requestGot = new Request(request.getType(),request.getMessage());
+				if(msgListener.getRequest().getType() == Request.TYPE_CHAT_QUIT)
+				{
+					this.dispose();
+					break;
+				}
+				if(msgListener.getAddress()==address)
+				{
+					msg.append("\n<"+this.yourName+">"+msgListener.getRequest().getMessage());
+					msgListener.isGetMsg = false;
+				}
 			}
-			System.out.println("msg got");
-			if(msgListener.getRequest().getType() == Request.TYPE_CHAT_QUIT)
-			{
-				this.dispose();
-				break;
-			}
-			msg.append("\n<"+this.yourName+">"+msgListener.getRequest().getMessage());
-			msgListener.isGetMsg = false;
 		}
 	}
 }

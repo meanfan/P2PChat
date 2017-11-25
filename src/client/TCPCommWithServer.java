@@ -54,7 +54,7 @@ public class TCPCommWithServer{
 		this.address = add;
 		this.request = req;
 		if(connect(address,request)==false)
-			JOptionPane.showMessageDialog(null, "服务器连接失败！");
+			JOptionPane.showMessageDialog(null, "鏈嶅姟鍣ㄨ繛鎺ュけ璐ワ紒");
 		else
 		{
 			try {

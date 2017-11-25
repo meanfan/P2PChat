@@ -7,7 +7,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 /*
- * ÇëÇóµÄ·â×°
+ * è¯·æ±‚çš„å°è£…
  */
 public class Request implements Serializable{
 	public static final int TYPE_REGISTER = 1;

@@ -9,7 +9,7 @@ import java.io.Serializable;
 import java.net.InetAddress;
 import java.util.HashMap;
 /*
- * �ظ��ķ�װ
+ * 回复的封装
  */
 public class Response implements Serializable{
 	public static final int TYPE_REGISTER = 1;

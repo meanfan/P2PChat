@@ -10,7 +10,7 @@ import javax.swing.*;
 import data.Request;
 import data.Response;
 /*
- *×¢²áÃæ°åÀà 
+ *æ³¨å†Œé¢æ¿ç±» 
  */
 public class Register extends JPanel implements ActionListener{
 
@@ -27,9 +27,9 @@ public class Register extends JPanel implements ActionListener{
 	public Register(UDPMessageListener msgListener)
 	{
 		boxV1 = Box.createVerticalBox();
-		boxV1.add(new JLabel("ÊäÈë·şÎñÆ÷IP£º"));
+		boxV1.add(new JLabel("è¾“å…¥æœåŠ¡å™¨IPï¼š"));
 		boxV1.add(Box.createVerticalStrut(16));
-		boxV1.add(new JLabel("ÊäÈëÓÃ»§Ãû£º"));
+		boxV1.add(new JLabel("è¾“å…¥ç”¨æˆ·åï¼š"));
 		boxV2 = Box.createVerticalBox();
 		tfIP = new JTextField(16);
 		boxV2.add(tfIP);
@@ -41,7 +41,7 @@ public class Register extends JPanel implements ActionListener{
 		subBoxH1.add(Box.createHorizontalStrut(20));
 		subBoxH1.add(boxV2);
 		subBoxH2 = Box.createVerticalBox();
-		btn = new JButton("È·¶¨");
+		btn = new JButton("ç¡®å®š");
 		btn.addActionListener(this);
 		subBoxH2.add(btn);
 		baseBox = Box.createVerticalBox();
@@ -74,23 +74,23 @@ public class Register extends JPanel implements ActionListener{
 	{
 		if(isRegister==true)
 		{
-			JOptionPane.showMessageDialog(this, "ÇëÎğÖØ¸´×¢²á¡£");
+			JOptionPane.showMessageDialog(this, "è¯·å‹¿é‡å¤æ³¨å†Œã€‚");
 			return;
 		}
 		if(tfIP.getText().length() == 0)
 		{
-			JOptionPane.showMessageDialog(null, "ÇëÊäÈë·şÎñÆ÷IP");
+			JOptionPane.showMessageDialog(null, "è¯·è¾“å…¥æœåŠ¡å™¨IP");
 			return;
 		}
 		if(tfName.getText().length() == 0)
 		{
-			JOptionPane.showMessageDialog(null, "ÇëÊäÈëÓÃ»§Ãû");
+			JOptionPane.showMessageDialog(null, "è¯·è¾“å…¥ç”¨æˆ·å");
 			return;
 		}
 		try {
 			address = InetAddress.getByName(tfIP.getText());
 		} catch (UnknownHostException e1) {
-			JOptionPane.showMessageDialog(null, "·şÎñÆ÷IP´íÎó");
+			JOptionPane.showMessageDialog(null, "æœåŠ¡å™¨IPé”™è¯¯");
 			e1.printStackTrace();
 			}
 		name = tfName.getText();
@@ -101,16 +101,16 @@ public class Register extends JPanel implements ActionListener{
 		{
 			if(response.getSuccess()==true)
 			{
-				JOptionPane.showMessageDialog(null, "×¢²á³É¹¦£¡");
+				JOptionPane.showMessageDialog(null, "æ³¨å†ŒæˆåŠŸï¼");
 				msgListener.setMyName(name);
 				msgListener.start();
 				isRegister = true;
 				
 			}
 			else
-				JOptionPane.showMessageDialog(null, "×¢²áÊ§°Ü£¬IP/ÓÃ»§ÃûÒÑ´æÔÚ");
+				JOptionPane.showMessageDialog(null, "æ³¨å†Œå¤±è´¥ï¼ŒIP/ç”¨æˆ·åå·²å­˜åœ¨");
 		}
 		else
-			JOptionPane.showMessageDialog(null, "Óë·şÎñÆ÷Í¨Ñ¶´íÎó");
+			JOptionPane.showMessageDialog(null, "ä¸æœåŠ¡å™¨é€šè®¯é”™è¯¯");
 	}
 }

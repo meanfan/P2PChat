@@ -19,7 +19,7 @@ import data.Request;
 import data.Response;
 
 /*
- * ÁÄÌìÁĞ±íÀà
+ * èŠå¤©åˆ—è¡¨ç±»
  */
 public class ChatTable extends JPanel implements ActionListener{
 	private JButton btn1,btn2;
@@ -33,11 +33,11 @@ public class ChatTable extends JPanel implements ActionListener{
 	private TCPCommWithServer message;
 	private HashMap<String,InetAddress> table;
 	private Object nameList[][];
-	private Object title[] = {"ÓÃ»§Ãû"};
+	private Object title[] = {"ç”¨æˆ·å"};
 	ChatTable(Register register){
-		btn1 = new JButton("»ñÈ¡ÁĞ±í");
+		btn1 = new JButton("è·å–åˆ—è¡¨");
 		btn1.addActionListener(this);
-		btn2 = new JButton("¿ªÊ¼ÁÄÌì");
+		btn2 = new JButton("å¼€å§‹èŠå¤©");
 		btn2.addActionListener(this);
 		box1 = Box.createHorizontalBox();
 		box1.add(btn1);
@@ -57,7 +57,7 @@ public class ChatTable extends JPanel implements ActionListener{
 		JButton b = (JButton)e.getSource();
 		if(register.isRegistered() == false)
 		{
-			JOptionPane.showMessageDialog(null, "ÇëÏÈ×¢²á£¡");
+			JOptionPane.showMessageDialog(null, "è¯·å…ˆæ³¨å†Œï¼");
 			return;
 		}
 		if(b == btn1)
@@ -84,7 +84,7 @@ public class ChatTable extends JPanel implements ActionListener{
 				validate();
 			}
 			else
-				JOptionPane.showMessageDialog(null, "Óë·şÎñÆ÷Í¨Ñ¶´íÎó");
+				JOptionPane.showMessageDialog(null, "ä¸æœåŠ¡å™¨é€šè®¯é”™è¯¯");
 			
 		}
 		if(b == btn2)
@@ -95,7 +95,7 @@ public class ChatTable extends JPanel implements ActionListener{
 				String name2Chat = (String)nameList[row][0];
 				if(name2Chat.matches(myName))
 				{
-					JOptionPane.showMessageDialog(null, "²»ÄÜºÍ×Ô¼ºÁÄÌì£¡");
+					JOptionPane.showMessageDialog(null, "ä¸èƒ½å’Œè‡ªå·±èŠå¤©ï¼");
 					return;
 				}
 				InetAddress address2Chat = table.get(name2Chat);
@@ -104,7 +104,7 @@ public class ChatTable extends JPanel implements ActionListener{
 				ct.start();
 			}
 			else
-				JOptionPane.showMessageDialog(null, "ÇëÑ¡ÔñÒ»¸öÁÄÌì¶ÔÏó£¡");
+				JOptionPane.showMessageDialog(null, "è¯·é€‰æ‹©ä¸€ä¸ªèŠå¤©å¯¹è±¡ï¼");
 		}
 	}
 }

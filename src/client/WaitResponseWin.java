@@ -13,7 +13,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 /*
- * ÁÄÌìÇëÇóµÈ´ı»Ø¸´²¢´¦Àí»Ø¸´
+ * èŠå¤©è¯·æ±‚ç­‰å¾…å›å¤å¹¶å¤„ç†å›å¤
  */
 class WaitResponseWin extends JFrame implements ActionListener,Runnable{
 	public int width = Toolkit.getDefaultToolkit().getScreenSize().width;
@@ -23,25 +23,25 @@ class WaitResponseWin extends JFrame implements ActionListener,Runnable{
 	private JButton cancel;
 	private String myName;
 	private String yourName;
-	private UDPMessageListener msgListener;//ºóÌ¨UDPÏûÏ¢½ÓÊÕÏß³Ì
+	private UDPMessageListener msgListener;//åå°UDPæ¶ˆæ¯æ¥æ”¶çº¿ç¨‹
 	boolean needAccecpt;
-	//ÉèÖÃÁÄÌìË«·½ĞÅÏ¢
+	//è®¾ç½®èŠå¤©åŒæ–¹ä¿¡æ¯
 	public void setChatInfo(String myName,String yourName)
 	{
 		this.myName = myName;
 		this.yourName = yourName;
 	}
-	//³õÊ¼»¯²¢´´½¨µÈ´ı´°¿Ú
+	//åˆå§‹åŒ–å¹¶åˆ›å»ºç­‰å¾…çª—å£
 	WaitResponseWin(UDPMessageListener msgListener,boolean needAccecpt)
 	{
-		super("ĞÅÏ¢");
+		super("ä¿¡æ¯");
 		setBounds((width - windowsWedth) / 2,
                 (height - windowsHeight) / 2, windowsWedth, windowsHeight);
 		BorderLayout layout = new BorderLayout();
 		setLayout(layout);
-		JLabel label = new JLabel("µÈ´ı¶Ô·½Í¬Òâ...");
+		JLabel label = new JLabel("ç­‰å¾…å¯¹æ–¹åŒæ„...");
 		add(label,BorderLayout.CENTER);
-		cancel = new JButton("È¡Ïû");
+		cancel = new JButton("å–æ¶ˆ");
 		cancel.addActionListener(this);
 		add(cancel,BorderLayout.SOUTH);
 		validate();
@@ -50,13 +50,13 @@ class WaitResponseWin extends JFrame implements ActionListener,Runnable{
 		this.needAccecpt = needAccecpt;
 	}
 	public void actionPerformed(ActionEvent e) {
-		if(e.getSource()==cancel)//È¡Ïû°´Å¥ÊÂ¼ş
+		if(e.getSource()==cancel)//å–æ¶ˆæŒ‰é’®äº‹ä»¶
 		{
 			Thread.interrupted();
 			this.dispose();
 		}
 	}
-	//Í¨¹ı¼àÌımsgListenerÖĞµÄ±äÁ¿needAccecptÀ´»ñÈ¡ÊÕµ½µÄ»Ø¸´
+	//é€šè¿‡ç›‘å¬msgListenerä¸­çš„å˜é‡needAccecptæ¥è·å–æ”¶åˆ°çš„å›å¤
 	public void run() {
 		if(needAccecpt == true)
 		{
@@ -73,7 +73,7 @@ class WaitResponseWin extends JFrame implements ActionListener,Runnable{
 				Thread chatWinThread = new Thread(chatWin);
 				chatWinThread.start();
 			}else if(msgListener.isChatAccecpted == 2)
-				JOptionPane.showMessageDialog(null, "ÓÃ»§"+yourName+"¾Ü¾øÁËÄãµÄÁÄÌìÇëÇó");
+				JOptionPane.showMessageDialog(null, "ç”¨æˆ·"+yourName+"æ‹’ç»äº†ä½ çš„èŠå¤©è¯·æ±‚");
 		}else
 		{
 			ChatWin chatWin = new ChatWin(myName,yourName,msgListener,msgListener.getAddress());

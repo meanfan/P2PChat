@@ -8,18 +8,18 @@ import java.net.*;
 import javax.swing.*;
 import data.*;
 /*
- * ÁÄÌìÇëÇó
+ * èŠå¤©è¯·æ±‚
  */
 class ChatRqt extends Thread{
 	private String myName;
 	private String yourName;
-	private InetAddress address;//¶Ô·½µØÖ·
-	private Request request;//ÇëÇóµÄ·â×°
-	UDPMessageListener msgListener;//ºóÌ¨UDPÏûÏ¢½ÓÊÕÏß³Ì
-	DatagramSocket socket;//ÒÑ½¨Á¢µÄsocket
-	DatagramPacket chatRequest;//ÇëÇóµÄÊı¾İ°ü
-	DatagramPacket chatRqtResponse;//»Ø¸´µÄÊı¾İ°ü
-	//´«Èë¸÷²ÎÊı
+	private InetAddress address;//å¯¹æ–¹åœ°å€
+	private Request request;//è¯·æ±‚çš„å°è£…
+	UDPMessageListener msgListener;//åå°UDPæ¶ˆæ¯æ¥æ”¶çº¿ç¨‹
+	DatagramSocket socket;//å·²å»ºç«‹çš„socket
+	DatagramPacket chatRequest;//è¯·æ±‚çš„æ•°æ®åŒ…
+	DatagramPacket chatRqtResponse;//å›å¤çš„æ•°æ®åŒ…
+	//ä¼ å…¥å„å‚æ•°
 	ChatRqt(UDPMessageListener msgListener,String myName,String yourName,InetAddress address)
 	{
 		this.msgListener = msgListener;
@@ -28,7 +28,7 @@ class ChatRqt extends Thread{
 		this.yourName = yourName;
 		this.address = address;
 	}
-	//·¢ËÍÁÄÌìÇëÇó£¬³É¹¦·¢ËÍºóÆô¶¯WaitResponseWinÏß³Ì£¬±¾Ïß³Ì½áÊø
+	//å‘é€èŠå¤©è¯·æ±‚ï¼ŒæˆåŠŸå‘é€åå¯åŠ¨WaitResponseWinçº¿ç¨‹ï¼Œæœ¬çº¿ç¨‹ç»“æŸ
 	public void run() {
 		
 		request = new Request(Request.TYPE_CHAT_REQUEST,myName);
@@ -48,10 +48,10 @@ class ChatRqt extends Thread{
 			waitWinThread.start();
 			//new ChatWin(myName,yourName,address);
 		} catch (SocketException e) {
-			JOptionPane.showMessageDialog(null, "ÓëÓÃ»§"+yourName+"ÇëÇóÁ¬½ÓÊ§°Ü");
+			JOptionPane.showMessageDialog(null, "ä¸ç”¨æˆ·"+yourName+"è¯·æ±‚è¿æ¥å¤±è´¥");
 			e.printStackTrace();
 		} catch (IOException e) {
-			JOptionPane.showMessageDialog(null, "ÓëÓÃ»§"+yourName+"ÇëÇóÁ¬½ÓÊ§°Ü");
+			JOptionPane.showMessageDialog(null, "ä¸ç”¨æˆ·"+yourName+"è¯·æ±‚è¿æ¥å¤±è´¥");
 			e.printStackTrace();
 		}
 	}

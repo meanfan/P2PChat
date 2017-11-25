@@ -1,6 +1,6 @@
 package client;
 /*
- * Ö÷´°¿ÚÀà
+ * ä¸»çª—å£ç±»
  */
 import javax.swing.*;
 
@@ -22,13 +22,13 @@ public class MainWin extends JFrame{
         this.setBounds((width - windowsWedth) / 2,
                 (height - windowsHeight) / 2, windowsWedth, windowsHeight);
         JTabbedPane p=new JTabbedPane(JTabbedPane.TOP);
-        //TODO Ìí¼ÓÑ¡Ïî¿¨¸÷×é¼ş p.add(Ãû³Æ,×é¼ş);
+        //TODO æ·»åŠ é€‰é¡¹å¡å„ç»„ä»¶ p.add(åç§°,ç»„ä»¶);
         msgListener = new UDPMessageListener(2333);
         register =  new Register(msgListener);
-        p.add("×¢²á",register);
+        p.add("æ³¨å†Œ",register);
         chatTable = new ChatTable(register);
-        p.add("ÁÄÌì", chatTable);
-        p.add("¹ØÓÚ", new JLabel("Copywrong (¡é) &#$@##@, No Rights Reserved."));
+        p.add("èŠå¤©", chatTable);
+        p.add("å…³äº", new JLabel("Copywrong (ï¿ ) &#$@##@, No Rights Reserved."));
         p.validate();
         this.add(p,BorderLayout.CENTER);
         this.validate();
